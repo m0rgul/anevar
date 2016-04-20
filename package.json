@@ -1,0 +1,29 @@
+{
+  "name": "anevar",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "set DEBUG=fab & npm start",
+    "start": "node index.js"
+  },
+  "author": "Bluemind Software",
+  "license": "ISC",
+  "dependencies": {
+    "async": "^1.5.2",
+    "bcryptjs": "^2.3.0",
+    "body-parser": "^1.14.2",
+    "connect-sqlite3": "^0.9.7",
+    "dateformat": "^1.0.12",
+    "ejs": "^2.4.1",
+    "express": "^4.13.4",
+    "express-session": "^1.13.0",
+    "morgan": "^1.6.1",
+    "multer": "^1.1.0",
+    "mysql": "^2.10.2",
+    "node-forge": "^0.6.38",
+    "nodemailer": "^2.1.0",
+    "nodemailer-smtp-transport": "^2.2.2",
+    "request": "^2.69.0"
+  }
+}

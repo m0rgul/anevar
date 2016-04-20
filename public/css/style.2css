@@ -1,0 +1,228 @@
+.newPuBtn {
+    margin-bottom: 20px;
+}
+
+#loginWindow {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    /* bring your own prefixes */
+    transform: translate(-50%, -50%);
+    border-radius: 10px;
+    border: 1px solid #eee;
+    overflow: hidden;
+
+    width: 400px;
+    min-height: 300px;
+    padding: 30px;
+    box-shadow: 10px 10px 5px #888888;
+}
+
+#loginWindow.docLogin {
+    min-height: 540px;
+    max-width: 350px;
+}
+
+#loginWindow .logoImg,
+#passRecovery .logoImg,
+#userAccountSettings .logoImg {
+    position: relative;
+    display: block;
+    max-height: 120px;
+    margin: 15px auto 30px;
+    text-align: center;
+}
+
+#loginWindow form .input-group {
+    margin-bottom: 20px;
+}
+
+#loginWindow form .btn {
+    width: 80%;
+    padding: 8px 10px;
+    font-size: 16px;
+}
+
+#loginWindow form .registerBtn {
+    margin-top: 10px;
+}
+
+#loginWindow form#registerForm {
+    display: none;
+}
+
+#loginWindow form#registerForm .help-block {
+    margin-top: -10px;
+}
+
+p.forgotPass, p.contactUs {
+    position: relative;
+    display: block;
+    text-align: center;
+    margin-top: 16px;
+    margin-bottom: 0;
+    font-size: 13px;
+    line-height: 14px;
+    color: #444;
+}
+
+p.contactUs {
+    margin-top: 10px;
+}
+
+p.contactUs a {
+    position: relative;
+    display: block;
+}
+
+p.forgotPass a, p.contactUs a {
+    font-size: 14px;
+    line-height: 15px;
+    font-style: italic;
+    text-decoration: none;
+
+}
+
+#loginError {
+    display: none;
+    position: relative;
+    text-align: center;
+    font-style: italic;
+    padding: 3px 0;
+    font-size: 14px;
+    font-weight: bold;
+    margin: 0;
+}
+
+#message {
+    position: relative;
+    display: block;
+    height: 30px;
+    margin-bottom: 5px;
+}
+
+#passRecovery {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 10px;
+    border: 1px solid #eee;
+    overflow: hidden;
+    max-width: 500px;
+    min-height: 200px;
+    padding: 30px;
+    box-shadow: 10px 10px 5px #888888;
+}
+
+/* admin settings */
+#userAccountSettings {
+    overflow: hidden;
+    max-width: 500px;
+    min-height: 200px;
+    margin: 50px auto;
+}
+
+[ng\:cloak], [ng-cloak], .ng-cloak {
+    display: none !important;
+}
+
+.popUpClose {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+}
+
+.navbar-brand img {
+    max-height: 99%;
+}
+
+.md-dialog-container {
+    z-index: 1101;
+}
+
+.md-scroll-mask {
+    z-index: 1100;
+}
+
+md-backdrop.md-opaque {
+    opacity: 0.48;
+}
+
+.footer {
+    width: 100%;
+    height: 90px;
+    background: #eee;
+    border-top: 1px solid #bbb;
+}
+
+.footer .row {
+    margin: 0;
+}
+
+.footer .container .logos {
+    text-align: center;
+    padding-top: 20px;
+}
+
+.footer .container .logos .logo {
+    position: relative;
+    display: inline-block;
+    vertical-align: middle;
+    margin: 0 20px;
+}
+
+.footer .container .row a,
+.footer .container .row a:hover {
+    text-decoration: none;
+}
+
+.footer .logo p {
+    font-style: italic;
+    color: #888;
+    margin: 0;
+}
+
+.footer .container .row a img {
+    max-height: 50px;
+    display: inline-block;
+    vertical-align: middle;
+    margin-left: 10px;
+}
+
+.footer .container .row span {
+    display: inline-block;
+    vertical-align: middle;
+    color: white;
+    font-size: 50px;
+    font-weight: bold;
+    margin: 0 20px
+}
+
+.footer .container .links {
+    text-align: center;
+    margin: 20px 0;
+}
+
+html, body {
+    height: 100%;
+}
+
+#wrapper {
+    min-height: 100%;
+    margin: 0 auto -90px; /* the bottom margin is the negative value of the footer's height */
+}
+
+.footer, .push {
+    height: 90px; /* .push must be the same height as .footer */
+}
+
+.table > tbody > tr.expired > td, .table > tbody > tr.expired > th, .table > tbody > tr > td.expired, .table > tbody > tr > th.expired, .table > tfoot > tr.expired > td, .table > tfoot > tr.expired > th, .table > tfoot > tr > td.expired, .table > tfoot > tr > th.expired, .table > thead > tr.expired > td, .table > thead > tr.expired > th, .table > thead > tr > td.expired, .table > thead > tr > th.expired {
+    background-color: red;
+    color: white;
+}
+
+.table-hover > tbody > tr.expired:hover > td, .table-hover > tbody > tr.expired:hover > th, .table-hover > tbody > tr:hover > .expired, .table-hover > tbody > tr > td.expired:hover, .table-hover > tbody > tr > th.expired:hover {
+    background-color: darkred;
+    font-weight: bold;
+}

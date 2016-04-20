@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <% include template/head.ejs %>
+</head>
+
+<body ng-app="contractsApp" ng-controller="contractsCtrl" ng-cloak>
+<div id="wrapper">
+    <% include template/menu.ejs %>
+    <div class="container-fluid" id="mainContent">
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header">Contracte</h1>
+            </div>
+            <!-- /.col-lg-12 -->
+        </div>
+        <!-- /.row -->
+
+        <div class="row" ng-cloak>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    Lista contracte inregistrate.
+                </div>
+                <!-- /.panel-heading -->
+                <div class="panel-body">
+                    <div class="dataTable_wrapper table-responsive">
+                        <div>
+                            <% if (user.contractControl !== undefined && user.contractControl == true) { %>
+                            <button class="btn btn-success pull-right newPuBtn" ng-click="newContractPU()">
+                                <i class="fa fa-plus-square"></i>&nbsp;&nbsp;
+                                Contract Nou
+                            </button>
+                            <% } %>
+                        </div>
+                        <table ng-table="tableParams"
+                               class="table table-bordered table-striped table-condensed table-hover">
+                            <tr ng-repeat="row in $data" ng-click="openModal(row)" class="rowClick"
+                                ng-class="{'expired' : (row.daysLeft <= 0),'danger': (row.daysLeft < 15 && row.daysLeft > 0), 'warning' : (row.daysLeft >= 15 && row.daysLeft <= 30)}">
+
+                                <td data-title="'Nr. Contract'" filter="{'contract_no': 'text'}"
+                                    sortable="'contract_no'">
+                                    {{row.contractNo}}
+                                </td>
+
+                                <td data-title="'Data Contract'" filter="{'contract_date': 'text'}"
+                                    sortable="'contract_date'">
+                                    {{row.contractDate | date:"dd/MM/yyyy"}}
+                                </td>
+
+                                <td data-title="'Prestator'" filter="{'provider': 'text'}" sortable="'provider'">
+                                    {{row.provider}}
+                                </td>
+
+                                <td data-title="'Beneficiar'" filter="{'beneficiary': 'text'}" sortable="'beneficiary'">
+                                    {{row.beneficiary}}
+                                </td>
+
+                                <td data-title="'Ob. Contract'" filter="{'contract_object': 'text'}"
+                                    sortable="'contract_object'">
+                                    {{row.contractObj}}
+                                </td>
+
+                                <td data-title="'Acte Aditionale'" filter="{'last_addendum': 'text'}"
+                                    sortable="'last_addendum'">
+                                    {{row.addendum}}
+                                </td>
+
+                                <td data-title="'Data expirarii'" filter="{'expiration_date': 'text'}"
+                                    sortable="'expiration_date'">
+                                    {{row.expDate | date:"dd/MM/yyyy"}}
+                                </td>
+
+                                <td data-title="'Posibilitate prelungire'" filter="{'can_renew': 'select'}"
+                                    filter-data="renewOptions" sortable="'can_renew'">
+                                    {{row.canRenew | daNu}}
+                                </td>
+
+                                <td data-title="'Val. Contract'" filter="{'contract_value': 'number'}"
+                                    sortable="'contract_value'">
+                                    {{row.contractVal | currency:"RON "}}
+                                </td>
+
+                                <td data-title="'Chiria conf Contract'" filter="{'contract_rent': 'number'}"
+                                    sortable="'contract_rent'">
+                                    {{row.contractRent | currency:"RON "}}
+                                </td>
+
+                                <td data-title="'Utilitati'" filter="{'utilities': 'number'}"
+                                    sortable="'utilities'">
+                                    {{row.utilities | currency:"RON "}}
+                                </td>
+
+                                <td data-title="'Alte Cheltuieli'" filter="{'other_expenses': 'number'}"
+                                    sortable="'other_expenses'">
+                                    {{row.otherExpenses | currency:"RON "}}
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="push"></div>
+</div>
+<% include template/footer.ejs %>
+
+<% if (user.contractControl !== undefined && user.contractControl == true) { %>
+<script type="text/ng-template" id="contracts.html">
+    <div class="modal-header">
+        <h3 class="modal-title">{{contract.action}}</h3>
+        <button type="button" class="btn btn-danger btn-sm popUpClose" ng-click="cancel()">
+            <i class="fa fa-close fa-fw"></i>
+        </button>
+    </div>
+    <div class="modal-body">
+        <form role="form" name="contractForm" novalidate>
+            <div class="row">
+                <div class="form-group col-md-6"
+                     ng-class="{'has-error' : contractForm.contractNo.$invalid && (contractForm.contractNo.$touched || trySubmit),
+                     'has-success': contractForm.contractNo.$valid && contractForm.contractNo.$touched}">
+                    <label>
+                        Numar contract <sup><i class="fa fa-asterisk text-info"></i></sup>
+                    </label>
+
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="fa fa-list-ol fa-lg fa-fw"></i></span>
+                        <input type="text" ng-model="contract.contractNo" class="form-control"
+                               placeholder="Numar contract" name="contractNo" required
+                               ng-model-options="{ updateOn: 'default blur', debounce: { 'default': 500, 'blur': 0 } }">
+                    </div>
+                    <div class="help-block text-center has-error" ng-messages="contractForm.contractNo.$error"
+                         ng-show="contractForm.contractNo.$touched || trySubmit">
+                        <p ng-message="required">Numarul contractului este obligatoriu.</p>
+                    </div>
+
+                </div>
+
+                <div class="form-group col-md-6"
+                     ng-class="{'has-error' : contractForm.contractDate.$invalid && (contractForm.contractDate.$touched || trySubmit),
+                     'has-success': contractForm.contractDate.$valid && contractForm.contractDate.$touched}">
+                    <label>
+                        Data contract <sup><i class="fa fa-asterisk text-info"></i></sup>
+                    </label>
+
+                    <div class="input-group">
+                        <input type="text" class="form-control" uib-datepicker-popup="dd/MM/yyyy"
+                               ng-model="contract.contractDate" name="contractDate"
+                               is-open="datePopup1.opened" datepicker-options="dateOptions"
+                               ng-required="true" alt-input-formats="altInputFormats"/>
+                        <span class="input-group-btn">
+                            <button type="button" class="btn btn-default" ng-click="openDate1()">
+                                <i class="fa fa-calendar fa-lg fa-fw"></i>
+                            </button>
+                        </span>
+                    </div>
+                    <div class="help-block text-center has-error" ng-messages="contractForm.contractDate.$error"
+                         ng-show="contractForm.contractDate.$touched || trySubmit">
+                        <p ng-message="required">Va rugam sa selectati o data.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="form-group col-md-6"
+                     ng-class="{'has-error' : contractForm.provider.$invalid && (contractForm.provider.$touched || trySubmit),
+                     'has-success': contractForm.provider.$valid && contractForm.provider.$touched}">
+                    <label>
+                        Prestator <sup><i class="fa fa-asterisk text-info"></i></sup>
+                    </label>
+
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="fa fa-briefcase fa-lg fa-fw"></i></span>
+                        <input type="text" ng-model="contract.provider" class="form-control" placeholder="Prestator"
+                               name="provider" required ng-maxlength="150"
+                               ng-model-options="{ updateOn: 'default blur', debounce: { 'default': 500, 'blur': 0 } }">
+                    </div>
+                    <div class="help-block text-center has-error" ng-messages="contractForm.provider.$error"
+                         ng-show="contractForm.provider.$touched || trySubmit">
+                        <p ng-message="required">Va rugam sa introduceti numele prestatorului.</p>
+
+                        <p ng-message="maxlength">Numele este prea lung.</p>
+                    </div>
+                </div>
+
+                <div class="form-group col-md-6"
+                     ng-class="{'has-error' : contractForm.beneficiary.$invalid && (contractForm.beneficiary.$touched || trySubmit),
+                     'has-success': contractForm.beneficiary.$valid && contractForm.beneficiary.$touched}">
+
+                    <label>
+                        Beneficiar <sup><i class="fa fa-asterisk text-info"></i></sup>
+                    </label>
+
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="fa fa-user fa-lg fa-fw"></i></span>
+                        <input type="text" ng-model="contract.beneficiary" class="form-control"
+                               placeholder="Beneficiar"
+                               name="beneficiary" required ng-maxlength="150"
+                               ng-model-options="{ updateOn: 'default blur', debounce: { 'default': 500, 'blur': 0 } }">
+                    </div>
+
+                    <div class="help-block text-center has-error" ng-messages="contractForm.beneficiary.$error"
+                         ng-show="contractForm.beneficiary.$touched || trySubmit">
+                        <p ng-message="required">Va rugam sa introduceti numele beneficiarului.</p>
+
+                        <p ng-message="maxlength">Numele este prea lung.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="form-group col-md-6"
+                     ng-class="{'has-error' : contractForm.contractObj.$invalid && (contractForm.contractObj.$touched || trySubmit),
+                     'has-success': contractForm.contractObj.$valid && contractForm.contractObj.$touched}">
+
+                    <label>
+                        Obiectul contractului <sup><i class="fa fa-asterisk text-info"></i></sup>
+                    </label>
+
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="fa fa-cube fa-lg fa-fw"></i></span>
+                        <input type="text" ng-model="contract.contractObj" class="form-control"
+                               placeholder="Obiectul contractului"
+                               name="contractObj" required ng-maxlength="150"
+                               ng-model-options="{ updateOn: 'default blur', debounce: { 'default': 500, 'blur': 0 } }">
+                    </div>
+
+                    <div class="help-block text-center has-error" ng-messages="contractForm.contractObj.$error"
+                         ng-show="contractForm.contractObj.$touched || trySubmit">
+                        <p ng-message="required">Va rugam sa introduceti obiectul contractului.</p>
+
+                        <p ng-message="maxlength">Textul este prea lung.</p>
+                    </div>
+                </div>
+
+                <div class="form-group col-md-6"
+                     ng-class="{'has-error' : contractForm.addendum.$invalid && (contractForm.addendum.$touched || trySubmit),
+                     'has-success': contractForm.addendum.$valid && contractForm.addendum.$touched}">
+
+                    <label>Acte aditionale</label>
+
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="fa fa-file fa-lg fa-fw"></i></span>
+                        <input type="text" ng-model="contract.addendum" class="form-control"
+                               placeholder="Acte aditionale"
+                               name="addendum" ng-maxlength="150"
+                               ng-model-options="{ updateOn: 'default blur', debounce: { 'default': 500, 'blur': 0 } }">
+                    </div>
+
+                    <div class="help-block text-center has-error" ng-messages="contractForm.addendum.$error"
+                         ng-show="contractForm.addendum.$touched || trySubmit">
+                        <p ng-message="maxlength">Textul este prea lung.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="form-group col-md-6"
+                     ng-class="{'has-error' : contractForm.expDate.$invalid && (contractForm.expDate.$touched || trySubmit),
+                     'has-success': contractForm.expDate.$valid && contractForm.expDate.$touched}">
+
+                    <label>
+                        Data expirarii contractului <sup><i class="fa fa-asterisk text-info"></i></sup>
+                    </label>
+
+                    <div class="input-group">
+                        <input type="text" class="form-control" uib-datepicker-popup="dd/MM/yyyy"
+                               ng-model="contract.expDate" name="expDate"
+                               is-open="datePopup2.opened" datepicker-options="dateOptions"
+                               ng-required="true" alt-input-formats="altInputFormats"/>
+                        <span class="input-group-btn">
+                            <button type="button" class="btn btn-default" ng-click="openDate2()">
+                                <i class="fa fa-calendar fa-lg fa-fw"></i>
+                            </button>
+                        </span>
+                    </div>
+
+                    <div class="help-block text-center has-error" ng-messages="contractForm.expDate.$error"
+                         ng-show="contractForm.expDate.$touched || trySubmit">
+                        <p ng-message="required">Va rugam sa selectati data expirarii contractului.</p>
+                    </div>
+                </div>
+
+                <div class="form-group col-md-6">
+                    <label>
+                        Posibilitate reinnoire contract <sup><i class="fa fa-asterisk text-info"></i></sup>
+                    </label>
+
+                    <div class="input-group" ng-class="{'has-error' : contractForm.canRenew.$invalid && (contractForm.canRenew.$touched || trySubmit),
+                     'has-success': contractForm.canRenew.$valid && contractForm.canRenew.$touched}">
+                        <span class="input-group-addon"><i class="fa fa-recycle fa-lg fa-fw"></i></span>
+                        <select name="canRenew" class="form-control" ng-model="contract.canRenew" required
+                                ng-options="option.title for option in renewOptions track by option.id">
+                        </select>
+                    </div>
+                    <div class="help-block text-center has-error" ng-messages="contractForm.canRenew.$error"
+                         ng-show="contractForm.canRenew.$touched || trySubmit">
+                        <p ng-message="required">Va rugam sa selectati o optiune.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="form-group col-md-3"
+                     ng-class="{'has-error' : contractForm.contractVal.$invalid && (contractForm.contractVal.$touched || trySubmit),
+                     'has-success': contractForm.contractVal.$valid && contractForm.contractVal.$touched}">
+
+                    <label>
+                        Valoarea contractului <sup><i class="fa fa-asterisk text-info"></i></sup>
+                    </label>
+
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="fa fa-money fa-lg fa-fw"></i></span>
+                        <input type="number" ng-model="contract.contractVal" class="form-control"
+                               placeholder="Valoare" name="contractVal" required min="0" step="0.01"
+                               ng-model-options="{ updateOn: 'default blur', debounce: { 'default': 500, 'blur': 0 } }">
+                    </div>
+
+                    <div class="help-block text-center has-error" ng-messages="contractForm.contractVal.$error"
+                         ng-show="contractForm.contractVal.$touched || trySubmit">
+                        <p ng-message="required">Va rugam sa introduceti valoarea contractului.</p>
+
+                        <p ng-message="number">Va rugam sa introduceti un numar in format valid.</p>
+
+                        <p ng-message="min">Va rugam sa introduceti un numar mai mare decat 0.</p>
+                    </div>
+                </div>
+
+                <div class="form-group col-md-3"
+                     ng-class="{'has-error' : contractForm.contractRent.$invalid && (contractForm.contractRent.$touched || trySubmit),
+                     'has-success': contractForm.contractRent.$valid && contractForm.contractRent.$touched}">
+
+                    <label>
+                        Chiria conf. contractului <sup><i class="fa fa-asterisk text-info"></i></sup>
+                    </label>
+
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="fa fa-money fa-lg fa-fw"></i></span>
+                        <input type="number" ng-model="contract.contractRent" class="form-control"
+                               placeholder="Chirie" name="contractRent" required min="0" step="0.01"
+                               ng-model-options="{ updateOn: 'default blur', debounce: { 'default': 500, 'blur': 0 } }">
+                    </div>
+
+                    <div class="help-block text-center has-error" ng-messages="contractForm.contractRent.$error"
+                         ng-show="contractForm.contractRent.$touched || trySubmit">
+                        <p ng-message="required">Va rugam sa introduceti chiria conform contractului.</p>
+
+                        <p ng-message="number">Va rugam sa introduceti un numar in format valid.</p>
+
+                        <p ng-message="min">Va rugam sa introduceti un numar mai mare decat 0.</p>
+                    </div>
+                </div>
+
+                <div class="form-group col-md-3"
+                     ng-class="{'has-error' : contractForm.utilities.$invalid && (contractForm.utilities.$touched || trySubmit),
+                     'has-success': contractForm.utilities.$valid && contractForm.utilities.$touched}">
+
+                    <label>
+                        Utilitati <sup><i class="fa fa-asterisk text-info"></i></sup>
+                    </label>
+
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="fa fa-money fa-lg fa-fw"></i></span>
+                        <input type="number" ng-model="contract.utilities" class="form-control"
+                               placeholder="Utilitati" name="utilities" required min="0" step="0.01"
+                               ng-model-options="{ updateOn: 'default blur', debounce: { 'default': 500, 'blur': 0 } }">
+                    </div>
+
+                    <div class="help-block text-center has-error" ng-messages="contractForm.utilities.$error"
+                         ng-show="contractForm.utilities.$touched || trySubmit">
+                        <p ng-message="required">Va rugam sa introduceti valoarea utilitatilor.</p>
+
+                        <p ng-message="number">Va rugam sa introduceti un numar in format valid.</p>
+
+                        <p ng-message="min">Va rugam sa introduceti un numar mai mare decat 0.</p>
+                    </div>
+                </div>
+
+                <div class="form-group col-md-3"
+                     ng-class="{'has-error' : contractForm.otherExpenses.$invalid && (contractForm.otherExpenses.$touched || trySubmit),
+                     'has-success': contractForm.otherExpenses.$valid && contractForm.otherExpenses.$touched}">
+
+                    <label>
+                        Alte cheltuieli <sup><i class="fa fa-asterisk text-info"></i></sup>
+                    </label>
+
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="fa fa-money fa-lg fa-fw"></i></span>
+                        <input type="number" ng-model="contract.otherExpenses" class="form-control"
+                               placeholder="Altele" name="otherExpenses" required min="0" step="0.01"
+                               ng-model-options="{ updateOn: 'default blur', debounce: { 'default': 500, 'blur': 0 } }">
+                    </div>
+
+                    <div class="help-block text-center has-error" ng-messages="contractForm.otherExpenses.$error"
+                         ng-show="contractForm.otherExpenses.$touched || trySubmit">
+                        <p ng-message="required">Va rugam sa introduceti suma pentru alte cheltuieli.</p>
+
+                        <p ng-message="number">Va rugam sa introduceti un numar in format valid.</p>
+
+                        <p ng-message="min">Va rugam sa introduceti un numar mai mare decat 0.</p>
+                    </div>
+                </div>
+            </div>
+
+            <label>Remarci</label>
+            <textarea class="form-control" rows="3" ng-model="contract.comments" placeholder="Remarci"></textarea>
+        </form>
+    </div>
+
+    <div class="modal-footer">
+        <p class="text-center text-info" style="margin-top: 20px; font-style: italic;">
+            Campurile marcate cu <sup><i class="fa fa-asterisk text-info"></i></sup> sunt obligatorii (in cazul
+            campurilor numerice, se accepta si valoarea 0).
+        </p>
+        <button class="btn btn-primary" type="submit" ng-click="ok()" ng-disabled="isSaving">
+            <i class="fa fa-spinner fa-pulse" ng-if="isSaving"></i>
+            Salvare Contract
+        </button>
+        <button class="btn btn-danger" type="button" ng-click="delete()" ng-disabled="isSaving">Stergere Contract
+        </button>
+        <button class="btn btn-warning" type="button" ng-click="cancel()" ng-disabled="isSaving">Anulare</button>
+    </div>
+</script>
+<% } else { %>
+<script type="text/ng-template" id="contracts.html">
+    <div class="modal-header">
+        <h3 class="modal-title">Vizualizare contract</h3>
+        <button type="button" class="btn btn-danger btn-sm popUpClose" ng-click="cancel()">
+            <i class="fa fa-close fa-fw"></i>
+        </button>
+    </div>
+    <div class="modal-body">
+        <dl class="dl-horizontal">
+            <dt>Numar contract</dt>
+            <dd>{{contract.contractNo}} / {{contract.contractDate | date:"dd-MM-yyyy"}}</dd>
+
+            <dt>Prestator</dt>
+            <dd>{{contract.provider}}</dd>
+
+            <dt>Beneficiar</dt>
+            <dd>{{contract.beneficiary}}</dd>
+
+            <dt>Obiectul contractului</dt>
+            <dd>{{contract.contractObj}}</dd>
+
+            <dt>Acte aditionale</dt>
+            <dd>{{contract.addendum}}</dd>
+
+            <dt>Data expirarii</dt>
+            <dd>{{contract.expDate | date:"dd-MM-yyyy"}}</dd>
+
+            <dt>Posibilitate prelungire</dt>
+            <dd>{{contract.canRenew | daNu}}</dd>
+
+            <dt>Valoare Contract</dt>
+            <dd>{{contract.contractVal | currency:"RON "}}</dd>
+
+            <dt>Chiria Conf. Contract</dt>
+            <dd>{{contract.contractRent | currency:"RON "}}</dd>
+
+            <dt>Utilitati</dt>
+            <dd>{{contract.utilities | currency:"RON "}}</dd>
+
+            <dt>Alte Cheltuieli</dt>
+            <dd>{{contract.otherExpenses | currency:"RON "}}</dd>
+
+            <dt>Remarci</dt>
+            <dd>{{contract.comments}}</dd>
+        </dl>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-primary" type="submit" ng-click="cancel()">
+            Inchidere
+        </button>
+    </div>
+</script>
+<script type="text/javascript">
+    var modalSize = 'md';
+</script>
+<% } %>
+
+<% include template/jsdefaults.ejs %>
+<script src="/js/contractsApp.js"></script>
+</body>
+</html>

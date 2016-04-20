@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <% include template/head.ejs %>
+</head>
+<body id="forgotPass" ng-app="forgotPass" ng-cloak>
+
+<div id="passRecovery" ng-controller="forgotPassCtrl">
+    <form id="passRecoveryForm" name="passRecoveryForm">
+        <img src="img/logo-anevar.png" alt="logo" class="logoImg img-responsive"/>
+
+        <div class="form-group"
+             ng-class="{'has-error' : passRecoveryForm.email.$invalid && passRecoveryForm.email.$touched,
+             'has-success' : passRecoveryForm.email.$valid && passRecoveryForm.email.$touched}">
+            <div class="input-group">
+            <span class="input-group-addon">
+                <i class="fa fa-envelope fa-lg fa-fw"></i>
+            </span>
+                <input type="email" class="form-control" placeholder="Email" aria-describedby="sizing-addon1"
+                       name="email" required ng-model="user.email">
+            </div>
+            <div class="help-block text-center has-error" ng-messages="passRecoveryForm.email.$error"
+                 ng-show="passRecoveryForm.email.$touched">
+                <p ng-message="required">Va rugam sa introduceti o adresa email.</p>
+
+                <p ng-message="email">Va rugam sa introduceti o adresa email valida (<i>nume@domeniu.com</i>).</p>
+            </div>
+        </div>
+
+        <button class="btn btn-success center-block" type="submit" ng-click="submitRegister()"
+                ng-disabled="passRecoveryForm.$invalid" ng-hide="resetOk">Resetare parola
+        </button>
+
+        <a href="/" ng-show="resetOk" class="btn btn-success center-block">Inapoi la autentificare</a>
+        <br/>
+
+        <p class="text-center" ng-class="{'text-success':email.success, 'text-danger':!email.success}">
+            {{email.text}}
+        </p>
+    </form>
+</div>
+
+<% if(typeof msg != 'undefined' && msg.length > 0) { %>
+<div class="alert alert-danger text-center" role="alert">
+    <strong>Atentie! </strong><%= msg %>
+</div>
+<% } %>
+
+<script src="js/libs/jquery.min.js"></script>
+<script src="js/libs/angular.js"></script>
+<script src="js/libs/angular-messages.min.js"></script>
+<script src="js/passForgot.js"></script>
+
+</body>
+</html>

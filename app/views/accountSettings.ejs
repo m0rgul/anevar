@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <% include template/head.ejs %>
+</head>
+
+<body ng-app="settingsApp" ng-controller="settingsCtrl" ng-cloak>
+<div id="wrapper">
+    <% include template/menu.ejs %>
+    <div class="container-fluid" id="mainContent">
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header">Setari cont</h1>
+            </div>
+            <!-- /.col-lg-12 -->
+        </div>
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel panel-default">
+                    <form id="userAccountSettings" name="userAccountSettings">
+                        <img src="/img/logo-anevar.png" alt="logo" class="logoImg img-responsive"/>
+
+                        <h3>Schimbare parola</h3>
+
+                        <div class="form-group"
+                             ng-class="{'has-error' : userAccountSettings.password.$invalid && userAccountSettings.password.$touched,
+                             'has-success' : userAccountSettings.password.$valid && userAccountSettings.password.$touched}">
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="fa fa-unlock fa-lg fa-fw"></i></span>
+                                <input type="password" class="form-control" placeholder="Parola"
+                                       aria-describedby="sizing-addon1" name="password" required ng-model="password"
+                                       ng-minlength="8" ng-pattern="passRegex">
+                            </div>
+                            <div class="help-block text-center has-error"
+                                 ng-messages="userAccountSettings.password.$error"
+                                 ng-show="userAccountSettings.password.$touched || trySubmit">
+                                <p ng-message="required">Va rugam sa introduceti noua parola.</p>
+
+                                <p ng-message="minlength">Parola trebuie sa aiba cel putin 8 caractere.</p>
+
+                                <p ng-message="pattern">Parola trebuie sa contina o litera mica, o litera mare si o
+                                    cifra.</p>
+                            </div>
+                        </div>
+
+                        <div class="form-group"
+                             ng-class="{'has-error' : userAccountSettings.password2.$invalid && userAccountSettings.password2.$touched,
+                             'has-success' : userAccountSettings.password2.$valid && userAccountSettings.password2.$touched}">
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="fa fa-unlock fa-lg fa-fw"></i></span>
+                                <input type="password" class="form-control" placeholder="Repetati parola"
+                                       aria-describedby="sizing-addon1" name="password2" required ng-model="password2"
+                                       ng-minlength="8" ng-pattern="passRegex">
+                            </div>
+                            <div class="help-block text-center has-error"
+                                 ng-messages="userAccountSettings.password2.$error"
+                                 ng-show="userAccountSettings.password2.$touched || trySubmit">
+                                <p ng-message="required">Va rugam sa introduceti noua parola inca odata.</p>
+
+                                <p ng-message="minlength">Parola trebuie sa aiba cel putin 8 caractere.</p>
+
+                                <p ng-message="pattern">Parola trebuie sa contina o litera mica, o litera mare si o
+                                    cifra.</p>
+
+                                <p ng-message="match">Parolele nu se potrivesc.</p>
+                            </div>
+                        </div>
+
+                        <p class="text-center" ng-class="{'text-success' : success, 'text-error':!success}">
+                            {{operationMessage}}
+                        </p>
+
+                        <button class="btn btn-success center-block" type="button" ng-click="changePass()"
+                                ng-disabled="userAccountSettings.$invalid || sendingData">
+                            Resetare parola
+                        </button>
+
+                        <div class="alert text-center center-block" style="margin-top: 20px;"
+                             ng-class="error ? 'alert-danger' : 'alert-success'" role="alert" ng-show="showAlert">
+                            {{message}}
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<% include template/jsdefaults.ejs %>
+<script src="/js/settingsCtrl.js"></script>
+</body>
+</html>

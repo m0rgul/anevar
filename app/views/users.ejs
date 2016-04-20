@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <% include template/head.ejs %>
+</head>
+
+<body ng-app="usersApp" ng-controller="usersCtrl" ng-cloak>
+<div id="wrapper">
+    <% include template/menu.ejs %>
+    <div class="container-fluid" id="mainContent">
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header">Utilizatori</h1>
+            </div>
+            <!-- /.col-lg-12 -->
+        </div>
+        <!-- /.row -->
+
+        <div class="row" ng-cloak>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    Lista utilizatori inregistrati.
+                </div>
+                <!-- /.panel-heading -->
+                <div class="panel-body">
+                    <div class="dataTable_wrapper table-responsive">
+                        <div>
+                            <button class="btn btn-success pull-right newPuBtn" ng-click="newUserPU()">
+                                <i class="fa fa-plus-square"></i>&nbsp;&nbsp;
+                                Utilizator Nou
+                            </button>
+                        </div>
+                        <table ng-table-dynamic="tableParams with cols"
+                               class="table table-bordered table-striped table-hover">
+                            <tr ng-repeat="row in $data" ng-click="openModal(row)" class="rowClick">
+                                <td ng-repeat="col in $columns">{{row[col.field]}}</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="push"></div>
+</div>
+<% include template/footer.ejs %>
+
+<script type="text/ng-template" id="users.html">
+    <div class="modal-header">
+        <h3 class="modal-title">{{user.action}}</h3>
+    </div>
+    <div class="modal-body">
+        <form role="form" name="userForm" novalidate>
+            <div class="form-group"
+                 ng-class="{'has-error' : userForm.fullName.$invalid && (userForm.fullName.$touched || trySubmit),
+                 'has-success' : userForm.fullName.$valid && userForm.fullName.$touched}">
+                <label>
+                    Nume si prenume utilizator <sup><i class="fa fa-asterisk text-info"></i></sup>
+                </label>
+
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="fa fa-user-md fa-lg fa-fw"></i></span>
+                    <input type="text" ng-model="user.fullName" class="form-control"
+                           placeholder="Nume si prenume utilizator" name="fullName"
+                           ng-model-options="{ updateOn: 'default blur', debounce: { 'default': 500, 'blur': 0 } }"
+                           ng-pattern="fullNameRegex" required>
+                </div>
+
+                <div class="help-block text-center has-error" ng-messages="userForm.fullName.$error"
+                     ng-show="userForm.fullName.$touched || trySubmit">
+                    <p ng-message="required">Va rugam sa introduceti numele complet al utilizatorului (nume si
+                        prenume).</p>
+                </div>
+            </div>
+
+            <div class="form-group"
+                 ng-class="{'has-error' : userForm.username.$invalid && (userForm.username.$touched || trySubmit),
+                 'has-success' : userForm.username.$valid && userForm.username.$touched}">
+                <label>Nume utilizator <sup><i class="fa fa-asterisk text-info"></i></sup></label>
+
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="fa fa-user-md fa-lg fa-fw"></i></span>
+                    <input type="text" ng-model="user.username" class="form-control" placeholder="Nume Utilizator"
+                           name="username" ng-disabled="user.edit" ng-required="!user.edit"
+                           ng-model-options="{ updateOn: 'default blur', debounce: { 'default': 500, 'blur': 0 } }"
+                           ng-minlength="4" ng-maxlength="15" ng-pattern="usernameRegex">
+                </div>
+
+                <div class="help-block text-center has-error" ng-messages="userForm.username.$error"
+                     ng-show="userForm.username.$touched || trySubmit">
+                    <p ng-message="required">Va rugam sa introduceti un nume de utilizator (username).</p>
+
+                    <p ng-message="unique">Acest nume de utilizator este deja folosit.</p>
+
+                    <p ng-message="minlength">Va rugam sa introduceti un nume de utilizator (username) format din cel
+                        putin 4 caractere.</p>
+
+                    <p ng-message="pattern">Va rugam sa nu folositi alte caractere decat cele alfa-numerice.</p>
+
+                    <p ng-message="maxlength">Va rugam sa introduceti un nume de utilizator (username) format din cel
+                        mult 15 caractere.</p>
+                </div>
+            </div>
+
+            <div class="form-group"
+                 ng-class="{'has-error' : userForm.email.$invalid && (userForm.email.$touched || trySubmit),
+                 'has-success' : userForm.email.$valid && userForm.email.$touched}">
+                <label>Email-ul Utilizatorului <sup><i class="fa fa-asterisk text-info"></i></sup></label>
+
+                <div class="input-group">
+                    <span class="input-group-addon"> <i class="fa fa-envelope fa-lg fa-fw"></i></span>
+                    <input type="email" ng-model="user.email" required class="form-control"
+                           placeholder="Email-ul Utilizatorului" name="email"
+                           ng-model-options="{ updateOn: 'default blur', debounce: { 'default': 250, 'blur': 0 } }">
+                </div>
+                <div class="help-block text-center has-error" ng-messages="userForm.email.$error"
+                     ng-show="userForm.email.$touched || trySubmit">
+                    <p ng-message="required">Va rugam sa introduceti o adresa email.</p>
+
+                    <p ng-message="email">Va rugam sa introduceti o adresa email in format valid.</p>
+
+                    <p ng-message="unique">Acest email este deja inregistrat.</p>
+                </div>
+            </div>
+
+            <div class="row" ng-class="{'has-error' : userForm.userCtrl.$invalid && (!userForm.userCtrl.$pristine || !userForm.contractCtrl.$pristine || trySubmit),
+            'has-success' : userForm.userCtrl.$valid && (!userForm.userCtrl.$pristine || !userForm.contractCtrl.$pristine)}">
+                <div class="form-group form-inline" style="display:block; float: left; width: 100%;">
+                    <div class="checkbox col-md-6">
+                        <label>
+                            <input type="checkbox" name="userCtrl" ng-model="user.userControl">
+                            Acces Management Utilizatori?
+                        </label>
+                    </div>
+
+                    <div class="checkbox col-md-6">
+                        <label>
+                            <input type="checkbox" name="contractCtrl" ng-model="user.contractControl">
+                            Acces Adaugare si Editare Contracte?
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+        </form>
+        <p class="text-center text-info" style="margin-top: 20px; font-style: italic;">
+            Campurile marcate cu <sup><i class="fa fa-asterisk text-info"></i></sup> sunt obligatorii.
+        </p>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-primary" type="button" ng-click="ok()" ng-disabled="isSaving">
+            <i class="fa fa-spinner fa-pulse" ng-if="isSaving"></i>
+            Salvare Utilizator
+        </button>
+        <button class="btn btn-danger" type="button" ng-click="delete($event)" ng-show="user.edit"
+                ng-disabled="isSaving">Stergere Utilizator
+        </button>
+        <button class="btn btn-warning" type="button" ng-click="cancel()" ng-disabled="isSaving">Anulare</button>
+    </div>
+</script>
+
+<% include template/jsdefaults.ejs %>
+<script src="/js/usersApp.js"></script>
+</body>
+</html>

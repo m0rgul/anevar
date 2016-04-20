@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <% include template/head.ejs %>
+</head>
+<body id="login" ng-app="loginApp" ng-controller="loginCtrl">
+
+<div id="loginWindow">
+    <form id="loginForm" name="loginForm" novalidate ng-cloak>
+        <img src="img/logo-anevar.png" alt="logo" class="logoImg img-responsive"/>
+
+        <h3>Gestiune Contracte</h3>
+
+        <div class="form-group"
+             ng-class="{'has-error' : loginForm.username.$invalid && (!loginForm.username.$pristine || trySubmit),
+             'has-success' : loginForm.username.$valid && !loginForm.username.$pristine}">
+            <div class="input-group">
+            <span class="input-group-addon">
+                <i class="fa fa-user-md fa-lg"></i>
+            </span>
+                <input type="text" class="form-control" placeholder="Nume utilizator" aria-describedby="sizing-addon1"
+                       name="username" required autofocus ng-model="user.username">
+            </div>
+            <span class="help-block text-center"
+                  ng-show="loginForm.username.$invalid && (!loginForm.username.$pristine || trySubmit)">Va rugam sa introduceti un nume de utilizator.</span>
+        </div>
+
+        <div class="form-group"
+             ng-class="{'has-error' : loginForm.password.$invalid && (!loginForm.password.$pristine || trySubmit),
+             'has-success' : loginForm.password.$valid && !loginForm.password.$pristine}">
+            <div class="input-group">
+            <span class="input-group-addon">
+                <i class="fa fa-unlock fa-lg"></i>
+            </span>
+                <input type="password" class="form-control" placeholder="Parola" aria-describedby="sizing-addon1"
+                       name="password" id="password" required ng-model="user.password">
+            </div>
+            <span class="help-block text-center"
+                  ng-show="loginForm.password.$invalid && (!loginForm.password.$pristine || trySubmit)">Va rugam sa introduceti o parola.</span>
+        </div>
+
+        <div id="message">
+            <p class="text-center" ng-class="result.success? 'text-success':'text-danger'"
+               ng-show="result.message.length>0">{{result.message}}</p>
+        </div>
+
+        <button class="btn btn-success center-block" type="submit" id="loginBtn" ng-click="login()"
+                ng-disabled="isSaving">Autentificare
+        </button>
+
+        <div class="loginFooter">
+            <p class="forgotPass">
+                <a href="/forgot">Ati uitat parola?</a>
+            </p>
+        </div>
+    </form>
+</div>
+
+<script src="js/libs/jquery.min.js"></script>
+<script src="js/libs/forge-sha256.min.js"></script>
+<script src="js/libs/angular.js"></script>
+<script src="js/login.js"></script>
+</body>
+</html>

@@ -1,0 +1,191 @@
+
+.ng-table th {
+    -moz-user-select: none;
+    text-align: center;
+}
+.ng-table th.sortable {
+    cursor: pointer;
+}
+.ng-table th.sortable .sort-indicator {
+    padding-right: 18px;
+    position: relative;
+}
+.ng-table th.sortable .sort-indicator::after, .ng-table th.sortable .sort-indicator::before {
+    border-color: #000 transparent;
+    border-style: solid;
+    border-width: 0 4px 4px;
+    content: "";
+    margin-top: -4px;
+    opacity: 0.3;
+    position: absolute;
+    right: 5px;
+    top: 50%;
+    visibility: visible;
+}
+.ng-table th.sortable .sort-indicator::before {
+    border-color: #000 transparent -moz-use-text-color;
+    border-style: solid solid none;
+    border-width: 4px 4px 0;
+    margin-top: 2px;
+}
+.ng-table th.sortable .sort-indicator:hover::after, .ng-table th.sortable .sort-indicator:hover::before {
+    opacity: 1;
+    visibility: visible;
+}
+.ng-table th.sortable.sort-desc, .ng-table th.sortable.sort-asc {
+    background-color: rgba(141, 192, 219, 0.25);
+    text-shadow: 0 1px 1px rgba(255, 255, 255, 0.75);
+}
+.ng-table th.sortable.sort-desc .sort-indicator::after, .ng-table th.sortable.sort-asc .sort-indicator::after {
+    margin-top: -2px;
+}
+.ng-table th.sortable.sort-desc .sort-indicator::before, .ng-table th.sortable.sort-asc .sort-indicator::before {
+    visibility: hidden;
+}
+.ng-table th.sortable.sort-asc .sort-indicator::after, .ng-table th.sortable.sort-asc .sort-indicator:hover::after {
+    opacity: 0.6;
+    visibility: visible;
+}
+.ng-table th.sortable.sort-desc .sort-indicator::after {
+    border-color: #000 transparent -moz-use-text-color;
+    border-style: solid solid none;
+    border-width: 4px 4px 0;
+    box-shadow: none;
+    opacity: 0.6;
+    visibility: visible;
+}
+.ng-table th.filter .input-filter {
+    box-sizing: border-box;
+    display: block;
+    margin: 0;
+    min-height: 30px;
+    width: 100%;
+}
+.ng-table .ng-table-group-header th {
+    text-align: left;
+}
+.ng-table .ng-table-group-selector {
+    display: block;
+}
+.ng-table .ng-table-group-close, .ng-table .ng-table-group-toggle {
+    float: right;
+}
+.ng-table .ng-table-group-toggle {
+    margin-right: 5px;
+}
+@media only screen and (max-width: 800px) {
+    .ng-table-responsive {
+        border-bottom: 1px solid #999;
+    }
+    .ng-table-responsive tr {
+        border-left: 1px solid #999;
+        border-right: 1px solid #999;
+        border-top: 1px solid #999;
+    }
+    .ng-table-responsive td::before {
+        font-weight: 700;
+        left: 0;
+        padding: 8px;
+        position: absolute;
+        text-align: left;
+        top: 0;
+        white-space: nowrap;
+        width: 50%;
+    }
+    .ng-table-responsive thead tr th {
+        text-align: left;
+    }
+    .ng-table-responsive thead tr.ng-table-filters th {
+        padding: 0;
+    }
+    .ng-table-responsive thead tr.ng-table-filters th form > div {
+        padding: 8px;
+    }
+    .ng-table-responsive td {
+        -moz-border-bottom-colors: none;
+        -moz-border-left-colors: none;
+        -moz-border-right-colors: none;
+        -moz-border-top-colors: none;
+        border-color: -moz-use-text-color -moz-use-text-color #eee;
+        border-image: none;
+        border-style: none none solid;
+        border-width: 0 0 1px;
+        padding-left: 50%;
+        position: relative;
+        text-align: left;
+        white-space: normal;
+    }
+    .ng-table-responsive td::before {
+        content: attr(data-title-text);
+    }
+    .ng-table-responsive, .ng-table-responsive thead, .ng-table-responsive tbody, .ng-table-responsive th, .ng-table-responsive td, .ng-table-responsive tr {
+        display: block;
+    }
+}
+.ng-table-pagination {
+    margin-top: 0;
+}
+.ng-table-group-selector::before, .ng-table-group-selector::after, .filter::before, .filter::after {
+    content: " ";
+    display: table;
+}
+.ng-table-group-selector::after, .filter::after {
+    clear: both;
+}
+.filter > .filter-cell {
+    box-sizing: border-box;
+    float: left;
+}
+.filter-horizontal > .filter-cell {
+    padding: 0 2px;
+}
+.filter-horizontal > .filter-cell:first-child {
+    padding-left: 0;
+}
+.filter-horizontal > .filter-cell:last-child, .filter-horizontal > .filter-cell.last {
+    padding-right: 0;
+}
+.s12 {
+    width: 100%;
+}
+.s11 {
+    width: 91.6667%;
+}
+.s10 {
+    width: 83.3333%;
+}
+.s9 {
+    width: 75%;
+}
+.s8 {
+    width: 66.6667%;
+}
+.s7 {
+    width: 58.3333%;
+}
+.s6 {
+    width: 50%;
+}
+.s5 {
+    width: 41.6667%;
+}
+.s4 {
+    width: 33.3333%;
+}
+.s3 {
+    width: 25%;
+}
+.s2 {
+    width: 16.6667%;
+}
+.s1 {
+    width: 8.33333%;
+}
+@media all and (max-width: 468px) {
+    .s12, .s11, .s10, .s9, .s8, .s7, .s6, .s5, .s4, .s3, .s2, .s1 {
+        width: 100%;
+    }
+    .filter > .filter-cell {
+        padding: 0;
+    }
+}

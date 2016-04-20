@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <% include template/head.ejs %>
+</head>
+<body id="forgotPass" ng-app="passReset">
+
+<div id="passRecovery" ng-controller="passResetCtrl" ng-cloak>
+    <form id="passRecoveryForm" name="passRecoveryForm">
+        <img src="/img/logo-anevar.png" alt="logo" class="logoImg img-responsive"/>
+
+        <div class="form-group"
+             ng-class="{'has-error' : passRecoveryForm.password.$invalid && passRecoveryForm.password.$touched,
+             'has-success' : passRecoveryForm.password.$valid && passRecoveryForm.password.$touched}">
+            <div class="input-group">
+                <span class="input-group-addon"><i class="fa fa-unlock fa-lg fa-fw"></i></span>
+                <input type="password" class="form-control" placeholder="Parola" aria-describedby="sizing-addon1"
+                       name="password" required ng-model="password" ng-minlength="8" ng-pattern="passRegex">
+            </div>
+            <div class="help-block text-center has-error" ng-messages="passRecoveryForm.password.$error"
+                 ng-show="passRecoveryForm.password.$touched || trySubmit">
+                <p ng-message="required">Va rugam sa introduceti noua parola.</p>
+
+                <p ng-message="minlength">Parola trebuie sa aiba cel putin 8 caractere.</p>
+
+                <p ng-message="pattern">Parola trebuie sa contina o litera mica, o litera mare si o cifra.</p>
+            </div>
+        </div>
+
+        <div class="form-group"
+             ng-class="{'has-error' : passRecoveryForm.password2.$invalid && passRecoveryForm.password2.$touched,
+             'has-success' : passRecoveryForm.password2.$valid && passRecoveryForm.password2.$touched}">
+            <div class="input-group">
+                <span class="input-group-addon">
+                <i class="fa fa-unlock fa-lg fa-fw"></i>
+                </span>
+                <input type="password" class="form-control" placeholder="Repetati parola"
+                       aria-describedby="sizing-addon1" name="password2" required ng-model="password2" ng-minlength="8"
+                       ng-pattern="passRegex">
+            </div>
+            <div class="help-block text-center has-error" ng-messages="passRecoveryForm.password2.$error"
+                 ng-show="passRecoveryForm.password2.$touched || trySubmit">
+                <p ng-message="required">Va rugam sa introduceti noua parola inca odata.</p>
+
+                <p ng-message="minlength">Parola trebuie sa aiba cel putin 8 caractere.</p>
+
+                <p ng-message="pattern">Parola trebuie sa contina o litera mica, o litera mare si o cifra.</p>
+
+                <p ng-message="match">Parolele nu se potrivesc.</p>
+            </div>
+        </div>
+
+        <button class="btn btn-success center-block" type="submit" ng-click="resetPassword()"
+                ng-disabled="passRecoveryForm.$invalid">
+            Resetare parola
+        </button>
+    </form>
+</div>
+<script src="/js/libs/angular.js"></script>
+<script src="/js/libs/angular-messages.min.js"></script>
+<script src="/js/libs/forge-sha256.min.js"></script>
+<script src="/js/passReset.js"></script>
+
+</body>
+</html>
